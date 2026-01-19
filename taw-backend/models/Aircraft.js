@@ -5,16 +5,16 @@ const aircraftSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    // Nuova struttura: posti divisi per classe
+    // La tua nuova struttura per i posti
     seats: {
         economy: { type: Number, required: true, default: 0 },
         business: { type: Number, required: true, default: 0 },
         first: { type: Number, required: true, default: 0 }
     },
-    totalSeats: { type: Number } // Campo calcolato o mantenuto per compatibilità
+    totalSeats: { type: Number } 
 });
 
-// Opzionale: calcola il totale automaticamente prima di salvare
+// Calcolo automatico totale (opzionale ma utile)
 aircraftSchema.pre('save', function(next) {
     this.totalSeats = (this.seats.economy || 0) + (this.seats.business || 0) + (this.seats.first || 0);
     next();
