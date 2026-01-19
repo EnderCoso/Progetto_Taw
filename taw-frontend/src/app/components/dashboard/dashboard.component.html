@@ -1,0 +1,121 @@
+<div class="container mt-4">
+  <h2 class="mb-4">💼 Dashboard Compagnia</h2>
+
+  <div class="row mb-5" *ngIf="stats">
+    <div class="col-md-4">
+      <div class="card text-white bg-success mb-3 shadow">
+        <div class="card-header">Ricavi Totali</div>
+        <div class="card-body">
+          <h1 class="card-title">{{ stats.totalRevenue | currency:'EUR' }}</h1>
+          <p class="card-text">Guadagnati dai biglietti venduti.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card text-white bg-info mb-3 shadow">
+        <div class="card-header">Passeggeri Totali</div>
+        <div class="card-body">
+          <h1 class="card-title">{{ stats.totalPassengers }}</h1>
+          <p class="card-text">Biglietti emessi su tutti i voli.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card text-white bg-primary mb-3 shadow">
+        <div class="card-header">Voli Gestiti</div>
+        <div class="card-body">
+          <h1 class="card-title">{{ stats.flightCount }}</h1>
+          <p class="card-text">Voli attivi nel database.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+          <h4>➕ Aggiungi Nuovo Volo</h4>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="createFlight()">
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Codice Volo</label>
+                <input type="text" class="form-control" [(ngModel)]="newFlight.flightCode" name="code" placeholder="es. AZ123" required>
+              </div>
+              
+              <div class="col-md-6">
+                <label class="form-label">Seleziona Aereo</label>
+                <select class="form-select" [(ngModel)]="newFlight.aircraftId" name="aircraft" required>
+                  <option value="" disabled selected>-- Scegli Modello --</option>
+                  <option *ngFor="let a of aircrafts" [value]="a._id">
+                    {{ a.model }} (F:{{a.capacityFirst}} B:{{a.capacityBusiness}} E:{{a.capacityEconomy}})
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+               <div class="col"><label class="small">Eco (€)</label><input type="number" class="form-control" [(ngModel)]="newFlight.priceEconomy" name="pE" required></div>
+               <div class="col"><label class="small">Bus (€)</label><input type="number" class="form-control" [(ngModel)]="newFlight.priceBusiness" name="pB" required></div>
+               <div class="col"><label class="small">First (€)</label><input type="number" class="form-control" [(ngModel)]="newFlight.priceFirst" name="pF" required></div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col"><input type="text" class="form-control" placeholder="Da" [(ngModel)]="newFlight.departureCity" name="depC" required></div>
+              <div class="col"><input type="text" class="form-control" placeholder="A" [(ngModel)]="newFlight.arrivalCity" name="arrC" required></div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label class="small">Data</label>
+                <input type="date" class="form-control" [(ngModel)]="newFlight.date" name="date" required>
+              </div>
+              <div class="col-md-4">
+                <label class="small">Ora Partenza</label>
+                <input type="time" class="form-control" [(ngModel)]="newFlight.departureTime" name="depTime" required>
+              </div>
+              <div class="col-md-4">
+                <label class="small">Ora Arrivo</label>
+                <input type="time" class="form-control" [(ngModel)]="newFlight.arrivalTime" name="arrTime" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">Pubblica Volo 🚀</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-5 mb-5" *ngIf="stats?.flights?.length > 0">
+    <h4>Dettaglio Rotte</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Volo</th>
+          <th>Rotta</th>
+          <th>Ricavo</th>
+          <th>Passeggeri</th>
+          <th>Occupazione</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of stats.flights">
+          <td>{{ f.flightCode }}</td>
+          <td>{{ f.route }}</td>
+          <td>{{ f.revenue | currency:'EUR' }}</td>
+          <td>{{ f.passengers }}</td>
+          <td>{{ f.occupancy }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

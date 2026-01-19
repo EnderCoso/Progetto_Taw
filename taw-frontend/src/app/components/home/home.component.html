@@ -1,0 +1,98 @@
+<div class="container">
+  
+  <div class="card p-4 mb-4 bg-light shadow-sm">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <input type="text" class="form-control" placeholder="Da (es. Roma)" [(ngModel)]="fromCity">
+      </div>
+      <div class="col-md-3">
+        <input type="text" class="form-control" placeholder="A (es. Milano)" [(ngModel)]="toCity">
+      </div>
+      <div class="col-md-3">
+        <input type="date" class="form-control" [(ngModel)]="selectedDate">
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary w-100" (click)="loadFlights()">Cerca Voli 🔎</button>
+      </div>
+    </div>
+  </div>
+
+  <h3>Voli Disponibili</h3>
+  
+  <div *ngIf="flights.length === 0" class="alert alert-warning">
+    Nessun volo trovato. Prova a cambiare ricerca o controlla che il database sia popolato.
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let flight of flights">
+      <div class="card h-100 shadow hover-effect">
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ flight.flightCode }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Compagnia: {{ flight.airline?.name || 'Sconosciuta' }}</h6>
+          
+          <hr>
+          
+          <div class="d-flex justify-content-between">
+            <div>
+              <strong>Partenza:</strong><br>
+              {{ flight.departureCity }}<br>
+              <small>{{ flight.departureTime | date:'short' }}</small>
+            </div>
+            <div class="text-end">
+              <strong>Arrivo:</strong><br>
+              {{ flight.arrivalCity }}<br>
+              <small>{{ flight.arrivalTime | date:'short' }}</small>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <p class="card-text text-center">
+            <strong>Posti liberi:</strong> {{ flight.seats?.length || 0 }}
+          </p>
+
+          <button class="btn btn-success w-100" (click)="openBookingModal(flight)">
+            Prenota Biglietto 🎫
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div *ngIf="showModal" class="modal-backdrop-custom">
+  <div class="modal-content-custom">
+    
+    <div class="modal-header">
+      <h4>Prenota Volo: {{ selectedFlight?.flightCode }}</h4>
+      <button class="btn-close" (click)="closeModal()"></button>
+    </div>
+
+    <div class="modal-body">
+      <p>Tratta: <b>{{ selectedFlight?.departureCity }} ➝ {{ selectedFlight?.arrivalCity }}</b></p>
+      
+      <div class="mb-3">
+        <label>Scegli il tuo posto:</label>
+        <select class="form-select" [(ngModel)]="bookingSeat">
+          <option value="" disabled selected>-- Seleziona Posto --</option>
+          <option *ngFor="let seat of availableSeats" [value]="seat.number">
+            {{ seat.number }} ({{ seat.type | uppercase }}) - {{ seat.price | currency:'EUR' }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="bag" [(ngModel)]="addBag">
+        <label class="form-check-label" for="bag">
+          Aggiungi Bagaglio Extra (+50€)
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-footer mt-3 text-end">
+      <button class="btn btn-secondary me-2" (click)="closeModal()">Annulla</button>
+      <button class="btn btn-success" (click)="confirmBooking()">Conferma Acquisto ✅</button>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{
+	"name": "TAW Backend Dev",
+	"context": "..",
+	"dockerFile": "../Dockerfile",
+
+	// Ecco la correzione che hai chiesto:
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"humao.rest-client"
+			]
+		}
+	},
+
+	"forwardPorts": [3000],
+	"remoteUser": "node",
+	
+	// --init serve per gestire bene i processi node dentro docker
+	"runArgs": ["--init"]
+}
