@@ -1,21 +1,23 @@
 const mongoose = require('mongoose');
 
 const aircraftSchema = new mongoose.Schema({
-    model: { type: String, required: true },
-    
-    // Configurazione Fisica
-    rows: { type: Number, required: true },       // Quante file totali ha l'aereo
-    seatsPerRow: { type: Number, required: true }, // Quanti sedili per fila (es. 6 = ABC DEF)
-    
-    // Configurazione Classi (Quanti posti per ogni tipo)
-    capacityFirst: { type: Number, default: 0 },
-    capacityBusiness: { type: Number, default: 0 },
-    capacityEconomy: { type: Number, required: true } // Il resto è economy
+    model: { 
+        type: String, 
+        required: true 
+    },
+    // Nuova struttura: posti divisi per classe
+    seats: {
+        economy: { type: Number, required: true, default: 0 },
+        business: { type: Number, required: true, default: 0 },
+        first: { type: Number, required: true, default: 0 }
+    },
+    totalSeats: { type: Number } // Campo calcolato o mantenuto per compatibilità
 });
 
-// Virtual per il totale (calcolato al volo)
-aircraftSchema.virtual('totalSeats').get(function() {
-    return this.capacityFirst + this.capacityBusiness + this.capacityEconomy;
+// Opzionale: calcola il totale automaticamente prima di salvare
+aircraftSchema.pre('save', function(next) {
+    this.totalSeats = (this.seats.economy || 0) + (this.seats.business || 0) + (this.seats.first || 0);
+    next();
 });
 
 module.exports = mongoose.model('Aircraft', aircraftSchema);
