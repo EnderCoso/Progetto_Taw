@@ -32,29 +32,20 @@ const seedData = async () => {
 
         // 2. AEREI
         console.log("✈️  6. Creazione Aerei...");
-        await Aircraft.insertMany([
-            { 
-                model: 'Boeing 737', 
-                rows: 25, seatsPerRow: 6,
-                capacityFirst: 0, 
-                capacityBusiness: 12,
-                capacityEconomy: 138 
-            },
-            { 
-                model: 'Airbus A320', 
-                rows: 28, seatsPerRow: 6,
-                capacityFirst: 12,
-                capacityBusiness: 18,
-                capacityEconomy: 138 
-            },
-            { 
-                model: 'Embraer 190', 
-                rows: 25, seatsPerRow: 4,
-                capacityFirst: 0,
-                capacityBusiness: 8,
-                capacityEconomy: 92 
-            }
-        ]);
+        const aircrafts = [
+        { 
+        model: 'Boeing 737', 
+        seats: { economy: 150, business: 20, first: 0 } 
+        },
+        { 
+        model: 'Airbus A320', 
+        seats: { economy: 140, business: 12, first: 0 } 
+        },
+        { 
+        model: 'Boeing 777', 
+        seats: { economy: 200, business: 40, first: 10 } 
+        }
+        ];
 
         console.log("🛠️  6b. Creazione Volo di Prova...");
 

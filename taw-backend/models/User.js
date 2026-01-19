@@ -1,36 +1,18 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // Assicurati di fare npm install bcryptjs
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-    email: { 
-        type: String, 
-        required: true, 
-        unique: true, 
-        lowercase: true, 
-        trim: true 
-    },
-    password: { 
-        type: String, 
-        required: true 
-    },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     role: { 
         type: String, 
-        enum: ['admin', 'airline', 'passenger'], 
-        required: true 
-    },
-    // Dati specifici per Passeggeri
-    name: { type: String },
-    surname: { type: String },
-    birthDate: { type: Date },
-
-    // Dati specifici per Compagnie Aeree
-    airlineName: { type: String }, // Nome della compagnia
-    iataCode: { type: String, uppercase: true }, // Es: AZ, RYR
-    
-    createdAt: { type: Date, default: Date.now }
+        enum: ['passenger', 'airline', 'admin'], 
+        default: 'passenger' 
+    }
 });
 
-// Middleware per hashare la password prima di salvare (Sicurezza base!)
+// Hash della password prima del salvataggio
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
@@ -38,7 +20,7 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-// Metodo helper per confrontare password
+// Metodo per verificare la password
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
