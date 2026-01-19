@@ -119,3 +119,54 @@
   </div>
 
 </div>
+<div class="container mt-5">
+  <h2>Dashboard</h2>
+  <p>Benvenuto! Ruolo: <strong>{{ userRole }}</strong></p>
+
+  <div *ngIf="userRole === 'airline'" class="card mt-4">
+    <div class="card-header bg-primary text-white">
+      Gestione Flotta - Aggiungi Aereo
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="createAircraft()">
+        
+        <div class="mb-3">
+          <label class="form-label">Modello Aereo</label>
+          <input type="text" class="form-control" [(ngModel)]="newAircraft.model" name="model" required placeholder="es. Boeing 737">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Numero di Registrazione (Targa)</label>
+          <input type="text" class="form-control" [(ngModel)]="newAircraft.registrationNumber" name="registration" placeholder="es. I-BIXC">
+        </div>
+
+        <h5 class="mt-3">Configurazione Posti</h5>
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label">Economy</label>
+            <input type="number" class="form-control" [(ngModel)]="newAircraft.seats.economy" name="economy" required min="1">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Business</label>
+            <input type="number" class="form-control" [(ngModel)]="newAircraft.seats.business" name="business" min="0">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">First Class</label>
+            <input type="number" class="form-control" [(ngModel)]="newAircraft.seats.first" name="first" min="0">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-4">Aggiungi Aereo</button>
+      </form>
+
+      <div *ngIf="message" class="alert alert-info mt-3">
+        {{ message }}
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="userRole === 'passenger'">
+    <p>Qui puoi vedere i tuoi biglietti prenotati.</p>
+  </div>
+
+</div>

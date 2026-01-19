@@ -61,7 +61,16 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/flights/stats`, { headers: this.getHeaders() });
   }
 
+  addAircraft(aircraftData: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.apiUrl}/aircrafts`, aircraftData, { headers });
+  }
+
+  // Ottieni lista aerei (utile per debug o liste)
   getAircrafts(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/flights/aircrafts`, { headers: this.getHeaders() });
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/aircrafts`, { headers });
   }
 }

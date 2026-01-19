@@ -12,6 +12,21 @@ import { Router } from '@angular/router';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
+  userRole: string = '';
+  
+  // Modello per il form aereo
+  newAircraft = {
+    model: '',
+    registrationNumber: '',
+    seats: {
+      economy: 0,
+      business: 0,
+      first: 0
+    }
+  };
+
+  message: string = '';
+  
   stats: any = null;
   aircrafts: any[] = []; // Lista aerei
   
@@ -49,6 +64,19 @@ export class DashboardComponent implements OnInit {
     this.api.getAirlineStats().subscribe({
       next: (data) => this.stats = data,
       error: (err) => console.error('Errore stats:', err)
+    });
+  }
+
+  createAircraft() {
+    this.apiService.addAircraft(this.newAircraft).subscribe({
+      next: (res) => {
+        this.message = 'Aereo aggiunto con successo!';
+        // Resetta il form
+        this.newAircraft = { model: '', registrationNumber: '', seats: { economy: 0, business: 0, first: 0 } };
+      },
+      error: (err) => {
+        this.message = 'Errore durante l\'aggiunta dell\'aereo: ' + err.error.message;
+      }
     });
   }
 
